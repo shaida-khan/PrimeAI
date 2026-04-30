@@ -1,0 +1,30 @@
+# PrimeAI — Private AI Workspace (Local RAG + Resume Analyzer)
+
+PrimeAI is a private, local AI application that allows users to interact with their own documents using Retrieval-Augmented Generation (RAG). It also includes a Resume Analyzer and job matching features.
+
+---
+
+## 🚀 Features
+- 📄 Upload documents and ask questions
+- 🧠 RAG (Retrieval-Augmented Generation)
+- 🧾 Resume Analyzer with ATS feedback
+- 💼 Job matching mode
+- ⚡ Fast local inference using Ollama
+- 🔒 Fully private (runs locally)
+
+---
+
+## 🛠️ Tech Stack
+- Python
+- LangChain
+- ChromaDB
+- Ollama
+- Gradio
+- PyPDF
+
+---
+
+## ▶️ Run the App
+```bash
+pip install -r requirements.txt
+python app.py
