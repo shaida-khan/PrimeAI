@@ -5,6 +5,7 @@ PrimeAI is a private, local AI application that allows users to interact with th
 ---
 
 ## 🚀 Features
+
 - 📄 Upload documents and ask questions
 - 🧠 RAG (Retrieval-Augmented Generation)
 - 🧾 Resume Analyzer with ATS feedback
@@ -15,6 +16,7 @@ PrimeAI is a private, local AI application that allows users to interact with th
 ---
 
 ## 🛠️ Tech Stack
+
 - Python
 - LangChain
 - ChromaDB
@@ -25,6 +27,19 @@ PrimeAI is a private, local AI application that allows users to interact with th
 ---
 
 ## ▶️ Run the App
-```bash
+
 pip install -r requirements.txt
+
 python app.py
+
+---
+
+## 📸 Screenshots
+
+See the screenshots folder.
+
+---
+
+## 👤 Author
+
+Shaida — transitioning from Civil Engineering to AI/Data Science
