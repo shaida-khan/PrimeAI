@@ -1,37 +1,37 @@
 # 🤖 PrimeAI — AI Resume & Document Intelligence Workspace
 
-PrimeAI is a multi-mode AI workspace designed for:
+PrimeAI is an AI-powered career and document intelligence workspace designed for ATS resume analysis, AI job matching, document QA, and recruiter-focused career recommendations.
 
-- Resume Analysis & ATS Review
-- AI-Powered Document QA
-- Job Matching Assistance
-- Technical Skill Extraction
-- Portfolio & Career Document Analysis
+Built for aspiring AI professionals, data analysts, and technical support candidates, PrimeAI combines AI-powered resume intelligence with exportable ATS reporting workflows.
 
-Built using:
+## 🌐 Live Demo
 
-- Python
-- Gradio
-- LangChain
-- Ollama
-- ChromaDB
-- Document Intelligence Workflows
+🚀 Hugging Face Demo:
+[PrimeAI Live Demo](YOUR_HUGGINGFACE_LINK)
+
+### 🚀 Core Capabilities
+- ATS Resume Analysis
+- AI Job Matching
+- AI Trainer / Data Analyst Role Evaluation
+- Exportable PDF ATS Reports
+- Exportable Word ATS Reports
+- Resume Improvement Recommendations
+- Document QA & Intelligence
+- Recruiter-Focused Career Guidance
 
 ---
 
 ## ✨ Features
 
 ### 📄 Resume Analyzer + ATS
-- Resume weakness analysis
-- ATS-focused feedback
-- Job-role matching
-- Resume bullet improvement suggestions
+- AI-powered ATS resume analysis
+- AI Trainer, Data Analyst, and AI Operations role matching
+- Resume strengths and improvement recommendations
+- Exportable PDF ATS reports
+- Exportable Word ATS reports
+- Recruiter-focused AI feedback
 
-### 📚 Document QA / Summary
-- Upload PDF or Word documents
-- Ask questions about uploaded files
-- Extract skills, certifications, technologies, and project details
-- AI-powered document summaries
+
 
 ### 💼 Job Matching
 - Analyze resume alignment with AI/Data roles
@@ -47,10 +47,40 @@ Built using:
 - LangChain
 - Ollama
 - ChromaDB
-- pypdf
+- ReportLab
+- python-docx
+- PyPDF
 - docx2txt
+- AI Resume Intelligence Workflows
+- ATS Resume Analysis
+- Document Intelligence Pipelines
 
 ---
+
+---
+
+## 🧠 System Architecture
+
+PrimeAI combines multiple AI workflows into a unified recruiter-focused workspace:
+
+- Resume Parsing
+- ATS Scoring
+- AI Role Matching
+- Document Intelligence
+- Recruiter Recommendation Generation
+- Exportable Reporting
+- AI Q&A Assistant
+
+The application is designed using modular AI workflow pipelines and scalable deployment architecture for future SaaS expansion.
+
+## 🌟 Portfolio Highlights
+- Professional multi-panel AI workspace UI
+- ATS-focused resume intelligence system
+- AI-powered recruiter feedback generation
+- Exportable PDF and Word ATS reports
+- AI Trainer and Data Analyst role matching
+- Document intelligence and QA workflows
+- Portfolio-ready Hugging Face deployment architecture
 
 ## 🚀 Run Locally
 
@@ -64,12 +94,8 @@ python app.py
 ### 🏠 PrimeAI Home
 ![PrimeAI Home](screenshots/primeai_home.png)
 
----
-
-### 📄 Resume Analyzer + ATS
+### 📄 Resume Analysis
 ![Resume Analysis](screenshots/resume_analysis.png)
 
----
-
-### 📚 Document QA / Summary
-![Document QA](screenshots/document_qa.png)
+### 🤖 AI Q&A Assistant
+![AI Q&A](screenshots/qa_assistant.png)

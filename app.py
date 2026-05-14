@@ -14,6 +14,27 @@ def clean_text(text):
     text = " ".join(text.split())
     return text
 
+def calculate_ats_score(resume_text, job_text):
+
+    resume_text = resume_text.lower()
+    job_text = job_text.lower()
+
+    keywords = list(set(job_text.split()))
+
+    matched = []
+
+    for word in keywords:
+        if len(word) > 4 and word in resume_text:
+            matched.append(word)
+
+    if len(keywords) == 0:
+        score = 0
+    else:
+        score = int((len(matched) / len(keywords)) * 100)
+
+    score = min(score, 95)
+
+    return score, matched[:25]
 
 def ask_ai(prompt):
     llm = ChatOllama(
@@ -25,40 +46,94 @@ def ask_ai(prompt):
 
 
 def job_matching(text, job_description):
+    ats_score, matched_keywords = calculate_ats_score(text, job_description)
     prompt = f"""
 You are PrimeAI, a professional AI job matching and career advisor.
 
 Compare the uploaded resume with the job description below.
 
-Return:
+# PrimeAI ATS Resume Report
+You MUST return the report using these exact headings only.
 
-# Job Match Score
-Give a realistic match score out of 100.
+## ATS Score
+Give a realistic ATS score out of 100.
 
-# Strong Matches
-List resume strengths that match the job.
+## Best-Fit Roles
+List 4 realistic roles:
+- AI Trainer
+- Data Analyst
+- AI Operations Support
+- Internal AI Tools Assistant
 
-# Missing Skills / Gaps
-List missing or weak skills.
+## Matched Keywords
+List matched resume keywords.
 
-# Keywords to Add
-List keywords the resume should include.
+## Missing Keywords
+List missing or weak AI/data keywords.
 
-# Best-Fit Job Titles
-Suggest related job titles.
+## Key Strengths
+List 3 resume strengths that match the job.
 
+## Areas for Improvement
+List 3 practical ATS improvements.
+
+## Rewrite Suggestions
+Rewrite weak resume bullet points professionally.
+
+## Final Recommendation
+Give a short hiring-positioning recommendation.
+- AI Trainer
+- Data Analyst
+- AI Operations
+- QA / AI Testing
+- Internal AI Tools
+- Technical Support AI
+- Business Intelligence
+- Analytics Support
+- AI Workflow Support
+- Research Support
 # Final Recommendation
 Explain whether the candidate should apply and what to improve.
+Formatting rules:
+- Use professional markdown headings.
+- Use bullet points for strengths and weaknesses.
+- Keep answers concise and ATS-focused.
+- Sound like a professional AI career assistant.
+- Avoid generic AI buzzwords.
+- Prioritize realistic entry-to-intermediate AI/data roles.
+
 
 Resume:
-
 {text}
 
 Job Description:
-
 {job_description}
 """
-    return ask_ai(prompt)
+    ai_response = ask_ai(prompt)
+
+    formatted_report = f"""
+# PrimeAI ATS Resume Report
+
+## ATS Score
+**{ats_score}/100**
+
+## Best-Fit Roles
+- AI Trainer
+- Data Analyst
+- AI Operations Support
+- Internal AI Tools Assistant
+
+## Matched Keywords
+{matched_keywords}
+
+## AI Resume Analysis
+{ai_response}
+
+## Final Recommendation
+Use this resume for AI Trainer, Data Analyst, AI Operations, and Internal AI Tools roles after adding stronger measurable achievements, project links, GitHub links, and Hugging Face live demo links.
+"""
+
+    return formatted_report
 
 
 def document_summary(text, question):
@@ -126,6 +201,52 @@ def respond(message, history, file, mode):
 
     return "Please select a mode."
 
+def create_ats_reports(answer):
+    import os
+    import tempfile
+    from datetime import datetime
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    pdf_path = os.path.join(tempfile.gettempdir(), f"PrimeAI_ATS_Report_{timestamp}.pdf")
+    word_path = os.path.join(tempfile.gettempdir(), f"PrimeAI_ATS_Report_{timestamp}.docx")
+
+    try:
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+        from reportlab.lib.styles import getSampleStyleSheet
+
+        doc = SimpleDocTemplate(pdf_path)
+        styles = getSampleStyleSheet()
+        story = []
+
+        story.append(Paragraph("PrimeAI ATS Resume Report", styles["Title"]))
+        story.append(Spacer(1, 12))
+
+        for line in answer.split("\n"):
+            if line.strip():
+                clean_line = line.replace("#", "").replace("*", "")
+                story.append(Paragraph(clean_line, styles["BodyText"]))
+                story.append(Spacer(1, 6))
+
+        doc.build(story)
+    except Exception:
+        pdf_path = None
+
+    try:
+        from docx import Document
+
+        document = Document()
+        document.add_heading("PrimeAI ATS Resume Report", 0)
+
+        for line in answer.split("\n"):
+            clean_line = line.replace("#", "").replace("*", "").strip()
+            if clean_line:
+                document.add_paragraph(clean_line)
+
+        document.save(word_path)
+    except Exception:
+        word_path = None
+
+    return pdf_path, word_path
 
 def chat_response(message, history, file, mode):
 
@@ -133,21 +254,22 @@ def chat_response(message, history, file, mode):
         history = []
 
     if not message:
-        return "", history
+        return "", history, None, None
 
     try:
         answer = respond(message, history, file, mode)
 
+        pdf_path, word_path = create_ats_reports(answer)
+
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": answer})
 
-        return "", history
-
+        return "", history, pdf_path, word_path
     except Exception as e:
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": f"Error: {str(e)}"})
 
-        return "", history
+        return "", history, pdf_path, word_path
 
 
 custom_css = """
@@ -344,27 +466,30 @@ with gr.Blocks(title="PrimeAI", css=custom_css) as demo:
         with gr.Column(scale=3, elem_id="main-area"):
             chatbot = gr.Chatbot(
                 label="PrimeAI Chat",
-                height=620
+                height=420,
+                render_markdown=True
             )
 
             message_input = gr.Textbox(
                 label="Ask PrimeAI",
                 placeholder="Ask a question, analyze a resume, or paste a job description...",
-                lines=3
+                lines=2
             )
 
             ask_btn = gr.Button("Ask PrimeAI")
+            pdf_output = gr.File(label="Download PDF ATS Report", interactive=False)
+            word_output = gr.File(label="Download Word ATS Report", interactive=False)
 
     ask_btn.click(
         fn=chat_response,
         inputs=[message_input, chatbot, file_input, mode_input],
-        outputs=[message_input, chatbot]
+        outputs=[message_input, chatbot, pdf_output, word_output]
     )
 
     message_input.submit(
         fn=chat_response,
         inputs=[message_input, chatbot, file_input, mode_input],
-        outputs=[message_input, chatbot]
+        outputs=[message_input, chatbot, pdf_output, word_output]
     )
 
     clear_btn.click(lambda: [], outputs=chatbot)
