@@ -495,4 +495,9 @@ with gr.Blocks(title="PrimeAI", css=custom_css) as demo:
     clear_btn.click(lambda: [], outputs=chatbot)
 
 
-demo.launch(server_port=7865, css=custom_css)
+demo.launch(
+    server_name="0.0.0.0",
+    server_port=7860,
+    css=custom_css,
+    ssr_mode=False
+)
